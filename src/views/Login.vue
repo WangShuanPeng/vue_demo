@@ -29,18 +29,19 @@ export default {
     }
   },
   methods: {
-   async handelLogin() {
-     const res = await this.$http.post('login',this.formData)
-     const data=res.data
-     const {meta:{status,msg}}=data
-     if(data.meta.status===200){
-       const token=data.data.token;
-       sessionStorage.setItem('token',token)
-         this.$message.success(msg)
-         console.log(token)
-     }else{
-       this.$message.error(msg)
-     }
+    async handelLogin () {
+      const res = await this.$http.post('login', this.formData)
+      const data = res.data
+      const {meta: {status, msg}} = data
+      if (data.meta.status === 200) {
+        const token = data.data.token
+        sessionStorage.setItem('token', token)
+        this.$message.success(msg)
+        console.log(token)
+        this.$router.push({name: 'home'})
+      } else {
+        this.$message.error(msg)
+      }
     }
   }
 }
