@@ -13,14 +13,85 @@
         </el-header>
         <el-container>
             <el-aside width="200px" class="aside">
+                <el-menu
+                    :unique-opened="true"
+                    :router="true"
+                   class="menu">
+                    <el-submenu index="1">
+                      <template slot="title">
+                        <i class="el-icon-location"></i>
+                        <span>用户管理</span>
+                      </template>
+                        <el-menu-item index="/users">
+                          <i class="el-icon-menu"></i>
+                          用户列表
+                          </el-menu-item>
+                    </el-submenu>
+                     <el-submenu index="2">
+                      <template slot="title">
+                        <i class="el-icon-location"></i>
+                        <span>权限管理</span>
+                      </template>
+                        <el-menu-item index="2-1">
+                          <i class="el-icon-menu"></i>
+                          角色列表
+                          </el-menu-item>
+                          <el-menu-item index="2-2">
+                          <i class="el-icon-menu"></i>
+                          权限列表
+                          </el-menu-item>
+                    </el-submenu>
+                     <el-submenu index="3">
+                      <template slot="title">
+                        <i class="el-icon-location"></i>
+                        <span>商品管理</span>
+                      </template>
+                        <el-menu-item index="3-1">
+                          <i class="el-icon-menu"></i>
+                          用户列表
+                          </el-menu-item>
+                    </el-submenu>
+                    <el-submenu index="4">
+                      <template slot="title">
+                        <i class="el-icon-location"></i>
+                        <span>订单管理</span>
+                      </template>
+                        <el-menu-item index="4-1">
+                          <i class="el-icon-menu"></i>
+                          用户列表
+                          </el-menu-item>
+                    </el-submenu>
+                     <el-submenu index="5">
+                      <template slot="title">
+                        <i class="el-icon-location"></i>
+                        <span>数据统计</span>
+                      </template>
+                        <el-menu-item index="5-1">
+                          <i class="el-icon-menu"></i>
+                          用户列表
+                          </el-menu-item>
+                    </el-submenu>
+                  </el-menu>
             </el-aside>
-            <el-main class="main">Main</el-main>
+            <el-main class="main">
+              <router-view></router-view>
+            </el-main>
         </el-container>
         </el-container>
 </template>
 
 <script>
 export default {
+  beforeCreate () {
+    const token = sessionStorage.getItem ('token')
+    console.log(token)
+    if (!token) {
+        this.$message.error ('请先登录！')
+      this.$router.push({
+        name: 'login'
+      })
+    }
+  },
   methods: {
     loginout () {
       this.$confirm('确认退出后台系统?', '提示', {
