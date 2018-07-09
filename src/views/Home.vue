@@ -84,7 +84,7 @@
 export default {
   beforeCreate () {
     const token = sessionStorage.getItem('token')
-    console.log(token)
+    // console.log(token)
     if (!token) {
       this.$message.error('请先登录')
       this.$router.push({
