@@ -83,10 +83,10 @@
 <script>
 export default {
   beforeCreate () {
-    const token = sessionStorage.getItem ('token')
+    const token = sessionStorage.getItem('token')
     console.log(token)
     if (!token) {
-        this.$message.error ('请先登录！')
+      this.$message.error('请先登录')
       this.$router.push({
         name: 'login'
       })
