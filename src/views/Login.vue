@@ -33,7 +33,7 @@ export default {
       const res = await this.$http.post('login', this.formData)
       const data = res.data
       const {meta: {status, msg}} = data
-      if (data.meta.status === 200) {
+      if (status === 200) {
         const token = data.data.token
         sessionStorage.setItem('token', token)
         this.$message.success(msg)
