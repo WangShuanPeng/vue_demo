@@ -195,10 +195,10 @@ export default {
       },
       roleList: [],
       selectlist: [{
-          value: '-1',
-          label: '请选择角色',
-          disabled: true
-        }
+        value: '-1',
+        label: '请选择角色',
+        disabled: true
+      }
       ]
     }
   },
@@ -206,11 +206,11 @@ export default {
     this.locadata()
   },
   methods: {
-     handleSizeChange (val) {
+    handleSizeChange (val) {
       // size发生变化
       this.pagesize = val
       this.locadata()
-      console.log(`每页 ${val} 条`,val)
+      console.log(`每页 ${val} 条`, val)
     },
     handleCurrentChange (val) {
       // 页码发生变化
@@ -218,7 +218,7 @@ export default {
     // 当每页条数发生变化，修改当前页码为第一页
       this.currentPage = val
       this.locadata()
-      console.log(`当前页: ${val}`,val)
+      console.log(`当前页: ${val}`, val)
     },
     async locadata () {
       this.loading = true
@@ -226,8 +226,8 @@ export default {
       const token = sessionStorage.getItem('token')
       // 在请求头中设置token
       this.$http.defaults.headers.common['Authorization'] = token
-      const params = {pagenum : this.currentPage, pagesize: this.pagesize}
-      const res = await this.$http.get('/users',{ params })
+      const params = {pagenum: this.currentPage, pagesize: this.pagesize}
+      const res = await this.$http.get('/users', { params })
       // this.loading = 'true'
       const data = res.data
       this.total = data.data.total
@@ -242,16 +242,16 @@ export default {
       }
     },
     // 搜索id
-   async handleSeach () {
+    async handleSeach () {
       const id = this.idval
-      const res = await this.$http.get('users/'+ id)
+      const res = await this.$http.get('users/' + id)
       const data = res.data
       const {meta: {status, msg}} = data
       if (status === 200) {
         this.list = data.data
         console.log(data.data)
       } else {
-        this.$message.error('用户不存在')
+        this.$message.error(msg)
       }
     },
     // 添加数据
@@ -301,22 +301,22 @@ export default {
         })
     },
     // change  改变swithc事件
-   async changeSwitch ($event,row) {
-      const id= row.id
-      const res = await this.$http.put('users/'+ id +'/state/'+$event)
+    async changeSwitch ($event, row) {
+      const id = row.id
+      const res = await this.$http.put('users/' + id + '/state/' + $event)
       const data = res.data
       const {meta: {status, msg}} = data
       if (status === 200) {
         this.locadata()
-         this.$message.success('设置状态成功')
+        this.$message.success('设置状态成功')
       } else {
         this.$message.error(msg)
       }
     },
-     async handelEdit (row) {
+    async handelEdit (row) {
       this.handelEditlist = true
       const id = row.id
-      const res = await this.$http.get('users/'+ id)
+      const res = await this.$http.get('users/' + id)
       const data = res.data
       const {meta: {status, msg}} = data
       if (status === 200) {
@@ -327,9 +327,9 @@ export default {
       }
     },
     // 修改用户数据
-   async handelEditlUsers () {
+    async handelEditlUsers () {
       const id = this.editlist.id
-      const res = await this.$http.put('users/'+id,this.editlist)
+      const res = await this.$http.put('users/' + id, this.editlist)
       const data = res.data
       const {meta: {status, msg}} = data
       if (status === 200) {
@@ -345,7 +345,7 @@ export default {
       this.handeleRoleDialog = true
       // 获取用户名称
       const id = row.id
-      const res = await this.$http.get('users/'+ id)
+      const res = await this.$http.get('users/' + id)
       const data = res.data
       const {meta: {status, msg}} = data
       if (status === 200) {
@@ -357,7 +357,7 @@ export default {
       // 获取角色列表
       this.handelRoleList()
     },
-     // 获取角色列表
+    // 获取角色列表
     async handelRoleList () {
       const res = await this.$http.get('roles')
       const data = res.data
@@ -377,14 +377,14 @@ export default {
     async handeleRoleCheck (row) {
       const role = this.roleid
       const id = row.id
-      const res = await this.$http.put('users/'+ id +'/role', {rid:role})
+      const res = await this.$http.put('users/' + id + '/role', {rid: role})
       const data = res.data
       const {meta: {status, msg}} = data
       if (status === 200) {
         this.$message.success(msg)
-         this.handeleRoleDialog = false
+        this.handeleRoleDialog = false
       } else {
-        this.$message.error(msg,status)
+        this.$message.error(msg, status)
       }
     }
   }
