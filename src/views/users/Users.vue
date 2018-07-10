@@ -377,11 +377,12 @@ export default {
     async handeleRoleCheck (row) {
       const role = this.roleid
       const id = row.id
-      const res = await this.$http.put('users/'+ id +role)
+      const res = await this.$http.put('users/'+ id +'/role', {rid:role})
       const data = res.data
       const {meta: {status, msg}} = data
       if (status === 200) {
         this.$message.success(msg)
+         this.handeleRoleDialog = false
       } else {
         this.$message.error(msg,status)
       }
