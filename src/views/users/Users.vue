@@ -12,16 +12,17 @@
         <el-input class="searchInput" clearable placeholder="请输入内容" v-model="idval">
           <el-button slot="append" icon="el-icon-search" @click="handleSeach"></el-button>
         </el-input>
-        <el-button type="success" plain @click="handleUser=true">添加用户</el-button>
-          <el-dialog title="添加用户" :visible.sync="handleUser">
-            <el-form ref="formData"
+        <el-button type="success" plain @click="handleUserDialog">添加用户</el-button>
+          <el-dialog title="添加用户" :visible.sync="handleUser" @closed="handleUserfalse">
+            <el-form ref="myfromuser"
               :model="formData"
               label-width="80px"
-              class="login-form">
-                <el-form-item label="用户名">
+              class="login-form"
+              :rules="rules">
+                <el-form-item label="用户名" prop="username">
                     <el-input v-model="formData.username"  placeholder="请输入用户名"></el-input>
                 </el-form-item>
-                <el-form-item label="密码">
+                <el-form-item label="密码" prop="password">
                     <el-input v-model="formData.password" type="password" placeholder="请输入密码"></el-input>
                 </el-form-item>
                 <el-form-item label="邮箱">
@@ -32,7 +33,7 @@
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
-              <el-button @click="handleUser = false">取 消</el-button>
+              <el-button @click="handleUserfalse">取 消</el-button>
               <el-button type="primary" @click="handleUserAdd" >确 定</el-button>
             </div>
         </el-dialog>
@@ -132,11 +133,7 @@
                     </el-form-item>
                 <el-form-item label="请选择角色" :label-width="RoleformLabelWidth" >
                   <el-select v-model="Roleform.rid" placeholder="请选择角色" @change="selectChange">
-                     <el-option v-for="item in selectlist"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value"
-                        :disabled="item.disabled"></el-option>
+                    <el-option disabled label="请选择" :value="-1"></el-option>
                     <el-option
                           v-for="item in roleList"
                           :key="item.id"
@@ -182,6 +179,16 @@ export default {
         mobile: '',
         time: ''
       },
+       rules: {
+          username: [
+            { required: true, message: '请输入用户名称', trigger: 'blur' },
+            { min: 3, max: 9, message: '长度在 3 到 9 个字符', trigger: 'blur' }
+          ],
+          password: [
+            { required: true, message: '请输入密码', trigger: 'blur' },
+            { min: 3, max: 15, message: '长度在 3 到 15 个字符', trigger: 'blur' }
+          ]
+      },
       handelEditlist: false,
       editlist: {
       },
@@ -191,15 +198,8 @@ export default {
       idval: '',
       RoleformLabelWidth: '120px',
       handeleRoleDialog: false,
-      Roleform: {
-      },
-      roleList: [],
-      selectlist: [{
-        value: '-1',
-        label: '请选择角色',
-        disabled: true
-      }
-      ]
+      Roleform: {},
+      roleList: []
     }
   },
   created () {
@@ -256,11 +256,25 @@ export default {
         this.$message.error(msg)
       }
     },
+    handleUserDialog () {
+      this.handleUser = true
+    },
+    // 取消弹出框
+    handleUserfalse () {
+      this.handleUser = false
+      for (let key in this.formData) {
+            this.formData[key] = '';
+          }
+    },
     // 添加数据
     async handleUserAdd () {
-      if (!this.formData.username || !this.formData.password) {
-        this.$message('用户名和密码不能为空')
-      } else {
+        this.$refs.myfromuser.validate(async (valid) => {
+        if (!valid) {
+           return this.$message.error('请完整输入内容')
+        }
+      // if (!this.formData.username || !this.formData.password) {
+      //   this.$message('用户名和密码不能为空')
+      // } else {
         // 发送请求之前，获取token
         const token = sessionStorage.getItem('token')
         // 在请求头中设置token
@@ -272,31 +286,31 @@ export default {
         const {meta: {status, msg}} = data
         if (status === 201) {
           this.$message.success('添加成功')
+
           this.handleUser = false
           this.locadata()
         } else {
           this.$message.error(msg)
         }
-      }
+      })
     },
     // 删除数据
-    handelDel (row) {
+    async handelDel (row) {
       this.$confirm('此操作将永久删除该用户, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       })
-        .then(() => {
+        .then( async () => {
           const id = row.id
-          this.$http.delete('users/' + id, function (res) {
-            const {meta: {status, msg}} = res.data
-            if (status === 200) {
-              this.$message.success(msg)
-              this.locadata()
-            } else {
-              this.$message.error(msg)
-            }
-          })
+          const res = await this.$http.delete('users/' + id)
+          const {meta: {status, msg}} = res.data
+          if (status === 200) {
+            this.$message.success(msg)
+            this.locadata()
+          } else {
+            this.$message.error(msg)
+          }
         })
         .catch(() => {
           this.$message({ type: 'info', message: '已取消删除' })
@@ -379,12 +393,14 @@ export default {
     async handeleRoleCheck (row) {
       const role = this.roleid
       const id = row.id
+      console.log(role,id)
       const res = await this.$http.put('users/' + id + '/role', {rid: role})
       const data = res.data
       const {meta: {status, msg}} = data
       if (status === 200) {
         this.$message.success(msg)
         this.handeleRoleDialog = false
+        this.locadata()
       } else {
         this.$message.error(msg, status)
       }

@@ -34,11 +34,11 @@
                       </template>
                         <el-menu-item index="/roles">
                           <i class="el-icon-menu"></i>
-                          权限列表
+                          角色列表
                           </el-menu-item>
                           <el-menu-item index="2-2">
                           <i class="el-icon-menu"></i>
-                          角色列表
+                          权限列表
                           </el-menu-item>
                     </el-submenu>
                      <el-submenu index="3">
