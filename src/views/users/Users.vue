@@ -241,14 +241,16 @@ export default {
         this.$message.error(msg)
       }
     },
-    // 搜索id
+    // 搜索框搜索内容
     async handleSeach () {
       const id = this.idval
-      const res = await this.$http.get('users/' + id)
+      const params =  {pagenum: this.currentPage, pagesize: this.pagesize}
+      const res = await this.$http.get('users?query=' + id, {params})
       const data = res.data
       const {meta: {status, msg}} = data
       if (status === 200) {
-        this.list = data.data
+        const {data: { users }} = data
+        this.list = users
         console.log(data.data)
       } else {
         this.$message.error(msg)
@@ -289,8 +291,8 @@ export default {
           this.$http.delete('users/' + id, function (res) {
             const {meta: {status, msg}} = res.data
             if (status === 200) {
-              this.$message.success('删除成功')
-              //  this.locadata()
+              this.$message.success(msg)
+              this.locadata()
             } else {
               this.$message.error(msg)
             }
