@@ -6,10 +6,15 @@ import router from './router'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import './assets/css/style.css'
-import Myaxios from './plugins/plugin'
+import Myaxios from '@/plugins/plugin'
 import moment from 'moment'
+import MyBreadcrumb from '@/components/MyBreadcrumb'
 
 Vue.config.productionTip = false
+
+// 注册全局组件
+Vue.component(MyBreadcrumb.name,MyBreadcrumb)
+
 
 // 创建全局时间过滤器
 Vue.filter('frmData', (value, frmDataString) => {

@@ -1,11 +1,8 @@
 <template>
   <el-card class="box-card">
     <!-- 面包屑 -->
-    <el-breadcrumb separator="/">
-      <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-      <el-breadcrumb-item>权限管理</el-breadcrumb-item>
-      <el-breadcrumb-item>角色列表</el-breadcrumb-item>
-    </el-breadcrumb>
+    <my-breadcrumb level1="权限管理" level2="角色列表"></my-breadcrumb>
+    
      <el-button class="addRole" @click="handleAddBtn">添加角色</el-button>
      <!-- 添加角色弹出框 -->
         <el-dialog title="添加角色" :visible.sync="handleAddDialog" @closed="handleAddDialogfalse">
@@ -300,7 +297,7 @@ export default {
     // 开启权限分配dialog
     handelRolelist (role) {
       this.handelRolelistDialog = true
-       this.currentRoleId = role.id
+      this.currentRoleId = role.id
       const arr = []
       role.children.forEach((item1) => {
         item1.children.forEach((item2) => {
@@ -329,7 +326,6 @@ export default {
       const {data: resData} = await this.$http.post(`roles/${this.currentRoleId}/rights`, {
         rids: newArray.join(',')
       })
-
       const {meta: {status, msg}} = resData
       if (status === 200) {
         this.handelRolelistDialog = false
