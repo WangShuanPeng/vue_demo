@@ -44,22 +44,45 @@
               style="width: 100%">
               <el-table-column type="expand">
                 <template slot-scope="props">
-                  <el-form label-position="left" inline class="demo-table-expand">
-                    <!-- <el-tree :data="listtwo" :props="defaultProps" @node-click="handleNodeClick"></el-tree> -->
-                    <!-- <el-tag
-                        v-for="tag in listtwo"
-                        :key="tag.authName"
-                        closable>
-                        {{tag.authName}}
-                      </el-tag>
-                       <el-tag
-                        v-for="tag in listthree"
-                        :key="tag.authName"
-                        closable
-                        type="success">
-                        {{tag.authName}}
-                      </el-tag> -->
-                  </el-form>
+                  <el-row v-for="item1 in props.row.children" :key="item1.id">
+                    <!-- 一级权限 -->
+                    <el-col :span="4">
+                                 <el-tag
+                                 @close="handelClose(props.row.id,item1.id)"
+                                  closable>
+                                  {{item1.authName}}
+                                </el-tag>
+                                <i class="el-icon-arrow-right"></i>
+                    </el-col>
+                    <el-col :span="20">
+                      <!-- 二级权限 -->
+                      <el-row v-for="item2 in item1.children" :key="item2.id">
+                          <el-col :span="4">
+                                <el-tag
+                                  closable
+                                   @close="handelClose(props.row.id,item2.id)"
+                                  type="success">
+                                  {{item2.authName}}
+                                </el-tag>
+                                 <i class="el-icon-arrow-right"></i>
+                          </el-col>
+                          <!-- 三级权限 -->
+                          <el-col :span="20">
+                                <el-tag
+                                v-for="item3 in item2.children" :key="item3.id"
+                                 @close="handelClose(props.row.id,item3.id)"
+                                  closable
+                                  type="warning">
+                                  {{ item3.authName}}
+                                </el-tag>
+                          </el-col>
+                        </el-row>
+                    </el-col>
+                  </el-row>
+                   <!-- 未分配权限显示 -->
+                        <el-row v-if="props.row.children.length === 0">
+                          <el-col :span="24">未分配权限</el-col>
+                        </el-row>
                 </template>
               </el-table-column>
                <el-table-column
@@ -122,9 +145,6 @@ export default {
   data() {
     return {
       listone: [],
-      listtwo: [],
-      listthree: [],
-      listfour: [],
       loading: true,
       formData: {
         roleName: '',
@@ -162,13 +182,6 @@ export default {
       this.loading = false
       // 一级分类
       this.listone = data.data
-      // this.listone.lable = this.listone.authName
-      // // 二级分类
-      this.listtwo = this.listone[0].children
-      // // 三级分类
-      // this.listthree = this.listtwo[0].children
-      // // 四级分类
-      // this.listfour = this.listthree[0].children
     },
     // 弹出添加dialog框
     handleAddBtn () {
@@ -229,6 +242,18 @@ export default {
         this.$message.error(msg)
       }
     },
+    // 删除角色权限
+     async handelClose (rowid,itemid) {
+       const res = await this.$http.delete(`roles/${rowid}/rights/${itemid}`)
+       const {meta: {status, msg}} = res.data
+       if (status === 200) {
+        this.$message.success(msg)
+        // role.children = res.data.data
+        this.locadata()
+       } else {
+         this.$message.error(msg)
+       }
+     },
     // a删除角色信息
     async handelDel (row) {
       this.$confirm('此操作将永久删除该用户, 是否继续?', '提示', {
