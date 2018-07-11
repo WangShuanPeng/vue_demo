@@ -17,58 +17,20 @@
                     :unique-opened="true"
                     :router="true"
                    class="menu">
-                    <el-submenu index="1">
+                    <el-submenu
+                    v-for="item in meuns"
+                    :key="item.id"
+                    :index="item.id+''">
                       <template slot="title">
                         <i class="el-icon-location"></i>
-                        <span>用户管理</span>
+                        <span>{{ item.authName }}</span>
                       </template>
-                        <el-menu-item index="/users">
+                        <el-menu-item
+                          v-for="item1 in item.children"
+                          :key="item1.id"
+                         :index="'/'+ item1.path">
                           <i class="el-icon-menu"></i>
-                          用户列表
-                          </el-menu-item>
-                    </el-submenu>
-                     <el-submenu index="2">
-                      <template slot="title">
-                        <i class="el-icon-location"></i>
-                        <span>权限管理</span>
-                      </template>
-                        <el-menu-item index="/roles">
-                          <i class="el-icon-menu"></i>
-                          角色列表
-                          </el-menu-item>
-                          <el-menu-item index="/rights">
-                          <i class="el-icon-menu"></i>
-                          权限列表
-                          </el-menu-item>
-                    </el-submenu>
-                     <el-submenu index="3">
-                      <template slot="title">
-                        <i class="el-icon-location"></i>
-                        <span>商品管理</span>
-                      </template>
-                        <el-menu-item index="3-1">
-                          <i class="el-icon-menu"></i>
-                          用户列表
-                          </el-menu-item>
-                    </el-submenu>
-                    <el-submenu index="4">
-                      <template slot="title">
-                        <i class="el-icon-location"></i>
-                        <span>订单管理</span>
-                      </template>
-                        <el-menu-item index="4-1">
-                          <i class="el-icon-menu"></i>
-                          用户列表
-                          </el-menu-item>
-                    </el-submenu>
-                     <el-submenu index="5">
-                      <template slot="title">
-                        <i class="el-icon-location"></i>
-                        <span>数据统计</span>
-                      </template>
-                        <el-menu-item index="5-1">
-                          <i class="el-icon-menu"></i>
-                          用户列表
+                          {{ item1.authName  }}
                           </el-menu-item>
                     </el-submenu>
                   </el-menu>
@@ -82,6 +44,11 @@
 
 <script>
 export default {
+  data () {
+    return {
+      meuns: []
+    }
+  },
   beforeCreate () {
     const token = sessionStorage.getItem('token')
     // console.log(token)
@@ -92,7 +59,17 @@ export default {
       })
     }
   },
+  created() {
+    this.locadata()
+  },
   methods: {
+    async locadata () {
+      const res = await this.$http.get('menus')
+      const {data, meta: {status, msg}} = res.data
+      if (status === 200 ) {
+        this.meuns = data
+      }
+    },
     loginout () {
       this.$confirm('确认退出后台系统?', '提示', {
         confirmButtonText: '确定',
