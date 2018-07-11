@@ -49,16 +49,16 @@ export default {
       meuns: []
     }
   },
-  beforeCreate () {
-    const token = sessionStorage.getItem('token')
-    // console.log(token)
-    if (!token) {
-      this.$message.error('请先登录')
-      this.$router.push({
-        name: 'login'
-      })
-    }
-  },
+  // beforeCreate () {
+  //   const token = sessionStorage.getItem('token')
+  //   // console.log(token)
+  //   if (!token) {
+  //     this.$message.error('请先登录')
+  //     this.$router.push({
+  //       name: 'login'
+  //     })
+  //   }
+  // },
   created() {
     this.locadata()
   },
