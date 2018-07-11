@@ -9,7 +9,7 @@
             <el-input v-model="formData.username"  placeholder="请输入账号"></el-input>
         </el-form-item>
         <el-form-item label="密码">
-            <el-input v-model="formData.password" type="password" placeholder="请输入密码"></el-input>
+            <el-input v-model="formData.password" @keyup.enter.native="handelLogin" type="password" placeholder="请输入密码"></el-input>
         </el-form-item>
         <el-form-item>
             <el-button type="primary" @click="handelLogin" class="login-btn">立即登录</el-button>
