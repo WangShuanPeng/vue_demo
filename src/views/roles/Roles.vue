@@ -48,7 +48,7 @@
                     <!-- 一级权限 -->
                     <el-col :span="4">
                                  <el-tag
-                                 @close="handelClose(props.row.id,item1.id)"
+                                 @close="handelClose(props.row,item1.id)"
                                   closable>
                                   {{item1.authName}}
                                 </el-tag>
@@ -60,7 +60,7 @@
                           <el-col :span="4">
                                 <el-tag
                                   closable
-                                   @close="handelClose(props.row.id,item2.id)"
+                                   @close="handelClose(props.row,item2.id)"
                                   type="success">
                                   {{item2.authName}}
                                 </el-tag>
@@ -70,7 +70,7 @@
                           <el-col :span="20">
                                 <el-tag
                                 v-for="item3 in item2.children" :key="item3.id"
-                                 @close="handelClose(props.row.id,item3.id)"
+                                 @close="handelClose(props.row,item3.id)"
                                   closable
                                   type="warning">
                                   {{ item3.authName}}
@@ -125,8 +125,17 @@
                     <el-button type="danger" size="mini" plain icon="el-icon-delete" @click="handelDel(scope.row)" ></el-button>
                     <el-button type="success" size="mini" plain icon="el-icon-check" @click="handelRolelist(scope.row)"></el-button>
                     <!-- 权限分配dialog -->
-                    <el-dialog title="权限分配" :visible.sync="handelRolelistDialog" >
-
+                    <el-dialog title="权限分配" :visible.sync="handelRolelistDialog" @open="handlRole">
+                        <el-tree
+                        ref="tree"
+                        v-loading="treeloadning"
+                         :data="treeData"
+                        :props="defaultProps"
+                         show-checkbox
+                         default-expand-all
+                         :default-checked-keys="checkedList"
+                         node-key="id">
+                         </el-tree>
                           <div slot="footer" class="dialog-footer">
                                 <el-button @click="handelRolelistDialogfalse">取 消</el-button>
                               <el-button type="primary" @click="handelRoleListEdit">确 认</el-button>
@@ -165,7 +174,15 @@ export default {
       handelEditlistDialog: false,
       editlist: {
       },
-      handelRolelistDialog: false
+      handelRolelistDialog: false,
+      treeData: [],
+      defaultProps: {
+        children: 'children',
+        label: 'authName'
+      },
+      treeloadning: true,
+      checkedList: [],
+      currentRoleId: -1
     }
   },
   created () {
@@ -176,12 +193,9 @@ export default {
     async locadata () {
       this.loading = true
       const res = await this.$http.get('/roles')
-      // this.loading = 'true'
-      const data = res.data
-      console.log(data)
+      const { data } = res.data
       this.loading = false
-      // 一级分类
-      this.listone = data.data
+      this.listone = data
     },
     // 弹出添加dialog框
     handleAddBtn () {
@@ -200,7 +214,6 @@ export default {
         if (!valid) {
           return this.$message.error('请完整输入内容')
         }
-        // const formData = this.formData
         const res = await this.$http.post('roles', this.formData)
         const data = res.data
         const {meta: {status, msg}} = data
@@ -243,17 +256,16 @@ export default {
       }
     },
     // 删除角色权限
-     async handelClose (rowid,itemid) {
-       const res = await this.$http.delete(`roles/${rowid}/rights/${itemid}`)
-       const {meta: {status, msg}} = res.data
-       if (status === 200) {
+    async handelClose (role, itemid) {
+      const {data: resData} = await this.$http.delete(`roles/${role.id}/rights/${itemid}`)
+      const { data, meta: { status, msg } } = resData
+      if (status === 200) {
         this.$message.success(msg)
-        // role.children = res.data.data
-        this.locadata()
-       } else {
-         this.$message.error(msg)
-       }
-     },
+        role.children = data
+      } else {
+        this.$message.error(msg)
+      }
+    },
     // a删除角色信息
     async handelDel (row) {
       this.$confirm('此操作将永久删除该用户, 是否继续?', '提示', {
@@ -276,18 +288,56 @@ export default {
           this.$message({ type: 'info', message: '已取消删除' })
         })
     },
+    // 开启分配弹出框加载
+    async handlRole () {
+      this.treeloadning = true
+      const res = await this.$http.get('rights/tree')
+      const {data} = res.data
+      // console.log(res.data)
+      this.treeloadning = false
+      this.treeData = data
+    },
     // 开启权限分配dialog
-    handelRolelist (row) {
+    handelRolelist (role) {
       this.handelRolelistDialog = true
+       this.currentRoleId = role.id
+      const arr = []
+      role.children.forEach((item1) => {
+        item1.children.forEach((item2) => {
+          item2.children.forEach((item3) => {
+            arr.push(item3.id)
+          })
+        })
+      })
+      this.checkedList = arr
     },
     // 关闭权限分配dialog
     handelRolelistDialogfalse () {
       this.handelRolelistDialog = false
     },
     // 确认权限分配
-    handelRoleListEdit () {
-      this.$message.success('分配成功')
-      this.handelRolelistDialog = false
+    async handelRoleListEdit () {
+      // this.$message.success('分配成功')
+      // this.handelRolelistDialog = false
+      // 获取到被选中的节点的id
+      const checkedKeys = this.$refs.tree.getCheckedKeys()
+      // 获取到半选的节点的id
+      const halfchechedKeys = this.$refs.tree.getHalfCheckedKeys()
+
+      const newArray = [...checkedKeys, ...halfchechedKeys]
+
+      const {data: resData} = await this.$http.post(`roles/${this.currentRoleId}/rights`, {
+        rids: newArray.join(',')
+      })
+
+      const {meta: {status, msg}} = resData
+      if (status === 200) {
+        this.handelRolelistDialog = false
+        this.$message.success(msg)
+        this.locadata()
+      } else {
+        this.$message.erro(msg)
+      }
     }
   }
 }
