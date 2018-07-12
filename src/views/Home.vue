@@ -65,10 +65,8 @@ export default {
   methods: {
     async locadata () {
       const res = await this.$http.get('menus')
-      const {data, meta: {status, msg}} = res.data
-      if (status === 200 ) {
-        this.meuns = data
-      }
+      const {data} = res.data
+      this.meuns = data
     },
     loginout () {
       this.$confirm('确认退出后台系统?', '提示', {

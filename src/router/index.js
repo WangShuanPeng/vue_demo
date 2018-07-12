@@ -67,14 +67,12 @@ router.beforeEach((to, from, next) => {
   } else {
     const token = sessionStorage.getItem('token')
     if (!token) {
-
-      router.push({name : 'login'})
+      router.push({name: 'login'})
       Message.warning('请登录后跳转')
       return
     }
     next()
   }
-
 })
 
 export default router
