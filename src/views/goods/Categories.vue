@@ -51,7 +51,7 @@
               label="操作">
               <template slot-scope="scope">
                 <el-button type="primary" size="mini" plain icon="el-icon-edit" ></el-button>
-                <el-button type="danger" size="mini" plain icon="el-icon-delete" ></el-button>
+                <el-button type="danger" size="mini" plain icon="el-icon-delete" @click="handleDelCate(scope.row)"></el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -84,14 +84,14 @@ export default {
     }
   },
   created() {
-    this.locaData()
+    this.locadata()
   },
   methods: {
     // 分页方法
     handleSizeChange (val) {
       // size发生变化
       this.pagesize = val
-      this.locaData()
+      this.locadata()
       console.log(`每页 ${val} 条`, val)
     },
     handleCurrentChange (val) {
@@ -99,16 +99,38 @@ export default {
       // this.pagesize = 5
       // 当每页条数发生变化，修改当前页码为第一页
       this.pagenum = val
-      this.locaData()
+      this.locadata()
       console.log(`当前页: ${val}`, val)
     },
-    async locaData() {
+    async locadata() {
       this.loading = true
       const {data: resData} = await this.$http.get(`categories?type=3&pagenum=${this.pagenum}&pagesize=${this.pagesize}`)
       const {data: {result, total}} = resData
       this.loading = false
       this.list = result
       this.total = total
+    },
+    // 删除分类
+    async handleDelCate (row) {
+      this.$confirm('此操作将永久删除该用户, 是否继续?', '提示', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning'
+    })
+      .then(async () => {
+        const id = row.cat_id
+        const res = await this.$http.delete(`categories/${id}`)
+        const {meta: {status, msg}} = res.data
+        if (status === 200) {
+          this.$message.success(msg)
+          this.locadata()
+        } else {
+          this.$message.error(msg)
+        }
+      })
+      .catch(() => {
+        this.$message({ type: 'info', message: '已取消删除' })
+      })
     }
   },
   components: {
