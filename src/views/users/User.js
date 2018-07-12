@@ -104,9 +104,6 @@ export default {
       //   this.$message('用户名和密码不能为空')
       // } else {
         // 发送请求之前，获取token
-        const token = sessionStorage.getItem('token')
-        // 在请求头中设置token
-        this.$http.defaults.headers.common['Authorization'] = token
         this.formData.time = Number(new Date())
         const formData = this.formData
         const res = await this.$http.post('users', formData)
