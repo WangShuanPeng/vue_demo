@@ -50,12 +50,24 @@
             <el-table-column
               label="操作">
               <template slot-scope="scope">
-                <el-button type="primary" size="mini" plain icon="el-icon-edit" ></el-button>
-                <el-button type="danger" size="mini" plain icon="el-icon-delete" @click="handleDelCate(scope.row)"></el-button>
-              </template>
-            </el-table-column>
-          </el-table>
-      </template>
+                <el-button type="primary" size="mini" plain icon="el-icon-edit" @click="handleEditCate(scope.row)" ></el-button>
+                <!-- 修改的 对话框 -->
+                <el-dialog title="编辑商品分类名称" :visible.sync="EditFormDialog" >
+                  <el-form :model="listEdit" label-width="80px">
+                    <el-form-item label="分类名称" >
+                      <el-input v-model="listEdit.cat_name" ></el-input>
+                    </el-form-item>
+                  </el-form>
+                  <div slot="footer" class="dialog-footer">
+                    <el-button @click="EditFormDialogfalse">取 消</el-button>
+                    <el-button type="primary" @click="handelEditCateName">确 定</el-button>
+                  </div>
+                </el-dialog>
+            <el-button type="danger" size="mini" plain icon="el-icon-delete" @click="handleDelCate(scope.row)"></el-button>
+          </template>
+      </el-table-column>
+    </el-table>
+</template>
       <!-- 分页功能 -->
        <template>
          <el-pagination
@@ -80,7 +92,9 @@ export default {
       loading: true,
       total: 0,
       pagesize: 5,
-      pagenum: 1
+      pagenum: 1,
+      listEdit: {},
+      EditFormDialog: false
     }
   },
   created() {
@@ -131,7 +145,34 @@ export default {
       .catch(() => {
         this.$message({ type: 'info', message: '已取消删除' })
       })
+    },
+    // 修改分类名称
+    // 1.弹出修改对话框
+    async handleEditCate (row) {
+      this.EditFormDialog = true
+      const id = row.cat_id
+      const res = await this.$http.get(`categories/${id}`)
+      this.listEdit = res.data.data
+    },
+    // 2.关闭弹出框
+    EditFormDialogfalse () {
+      this.EditFormDialog = false
+    },
+    async handelEditCateName () {
+      const id = this.listEdit.cat_id
+      const listEdit = this.listEdit
+      const res = await this.$http.put(`categories/${id}`,listEdit)
+      const {data, meta: {status, msg}} = res.data
+
+      if (status === 200) {
+        this.$message.success(msg)
+        this.EditFormDialog = false
+        this.locadata()
+      } else {
+        this.$message.error(msg)
+      }
     }
+
   },
   components: {
     ElTreeGrid
