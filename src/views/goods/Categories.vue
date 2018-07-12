@@ -123,8 +123,8 @@ export default {
       optionslist: [],
       // selectedOptions: [],
       props: {
-        label:'cat_name',
-        value:'cat_id',
+        label: 'cat_name',
+        value: 'cat_id',
         children: 'children'
       },
       // 修改模块
@@ -174,7 +174,7 @@ export default {
     },
     handleChange (value) {
       this.casderlist = value
-      console.log(this.casderlist,value)
+      console.log(this.casderlist, value)
       // console.log(this.selectedOptions)
     },
     // 添加分类
@@ -183,7 +183,7 @@ export default {
       const name = this.listAdd.cat_name
       console.log(this.casderlist[0])
       if (pid.length === 0) {
-        const {data: resData} = await this.$http.post(`categories`,{cat_pid:0,cat_name:name,cat_level:0})
+        const {data: resData} = await this.$http.post(`categories`, {cat_pid: 0, cat_name: name, cat_level: 0})
         const {meta: {status, msg}} = resData
         if (status === 201) {
           this.$message.success(msg)
@@ -194,7 +194,7 @@ export default {
         }
       }
       if (pid.length === 1) {
-        const {data: resData} = await this.$http.post(`categories`,{cat_pid:this.casderlist[0],cat_name:name,cat_level:1})
+        const {data: resData} = await this.$http.post(`categories`, {cat_pid: this.casderlist[0], cat_name: name, cat_level: 1})
         const {meta: {status, msg}} = resData
         if (status === 201) {
           this.$message.success(msg)
@@ -205,7 +205,7 @@ export default {
         }
       }
       if (pid.length === 2) {
-        const {data: resData} = await this.$http.post(`categories`,{cat_pid:this.casderlist[1],cat_name:name,cat_level:2})
+        const {data: resData} = await this.$http.post(`categories`, {cat_pid: this.casderlist[1], cat_name: name, cat_level: 2})
         const {meta: {status, msg}} = resData
         if (status === 201) {
           this.$message.success(msg)
@@ -219,24 +219,24 @@ export default {
     // 删除分类
     async handleDelCate (row) {
       this.$confirm('此操作将永久删除该用户, 是否继续?', '提示', {
-      confirmButtonText: '确定',
-      cancelButtonText: '取消',
-      type: 'warning'
-    })
-      .then(async () => {
-        const id = row.cat_id
-        const res = await this.$http.delete(`categories/${id}`)
-        const {meta: {status, msg}} = res.data
-        if (status === 200) {
-          this.$message.success(msg)
-          this.locadata()
-        } else {
-          this.$message.error(msg)
-        }
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
       })
-      .catch(() => {
-        this.$message({ type: 'info', message: '已取消删除' })
-      })
+        .then(async () => {
+          const id = row.cat_id
+          const res = await this.$http.delete(`categories/${id}`)
+          const {meta: {status, msg}} = res.data
+          if (status === 200) {
+            this.$message.success(msg)
+            this.locadata()
+          } else {
+            this.$message.error(msg)
+          }
+        })
+        .catch(() => {
+          this.$message({ type: 'info', message: '已取消删除' })
+        })
     },
     // 修改分类名称
     // 1.弹出修改对话框
@@ -253,8 +253,8 @@ export default {
     async handelEditCateName () {
       const id = this.listEdit.cat_id
       const listEdit = this.listEdit
-      const res = await this.$http.put(`categories/${id}`,listEdit)
-      const {data, meta: {status, msg}} = res.data
+      const res = await this.$http.put(`categories/${id}`, listEdit)
+      const {meta: {status, msg}} = res.data
 
       if (status === 200) {
         this.$message.success(msg)

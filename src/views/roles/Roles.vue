@@ -149,6 +149,7 @@
 export default {
   data() {
     return {
+      // 加载类别
       listone: [],
       loading: true,
       formData: {
@@ -157,6 +158,7 @@ export default {
       },
       handleAddDialog: false,
       formLabelWidth1: '120px',
+      // 判断表单输入框
       Rolerules: {
         roleName: [
           { required: true, message: '请输入角色名称', trigger: 'blur' },
@@ -167,6 +169,7 @@ export default {
           { min: 3, max: 9, message: '长度在 3 到 9 个字符', trigger: 'blur' }
         ]
       },
+      // 修改信息
       handelEditlistDialog: false,
       editlist: {
       },

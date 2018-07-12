@@ -1,6 +1,7 @@
 export default {
   data () {
     return {
+      // 加载类别
       list: [],
       loading: true,
       handleUser: false,
@@ -11,6 +12,7 @@ export default {
         mobile: '',
         time: ''
       },
+      // 判断表单输入框
        rules: {
           username: [
             { required: true, message: '请输入用户名称', trigger: 'blur' },
@@ -21,6 +23,7 @@ export default {
             { min: 3, max: 15, message: '长度在 3 到 15 个字符', trigger: 'blur' }
           ]
       },
+      // 修改用户
       handelEditlist: false,
       editlist: {
       },
@@ -29,6 +32,7 @@ export default {
       currentPage: 1,
       idval: '',
       RoleformLabelWidth: '120px',
+      // 删除用户
       handeleRoleDialog: false,
       Roleform: {},
       roleList: []
