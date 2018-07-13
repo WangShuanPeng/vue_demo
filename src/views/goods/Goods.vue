@@ -5,17 +5,11 @@
      <!--搜索框 -->
       <el-row class="searchAt">
          <el-col :span="24">
-          <!-- <el-input class="searchInput" clearable placeholder="请输入内容" v-model="idval">
+          <el-input class="searchInput" clearable placeholder="请输入内容" v-model="goodsval">
             <el-button slot="append" icon="el-icon-search" ></el-button>
-          </el-input> -->
-          <!-- 添加商品对话框 -->
-          <!-- <el-button type="success" plain @click="handleUserDialog">添加用户</el-button>
-            <el-dialog title="添加用户" :visible.sync="handleUser" @closed="handleUserfalse">
-              <div slot="footer" class="dialog-footer">
-                <el-button @click="handleUserfalse">取 消</el-button>
-                <el-button type="primary" @click="handleUserAdd" >确 定</el-button>
-              </div>
-          </el-dialog> -->
+          </el-input>
+          <!-- 添加商品 -->
+           <!-- <el-button type="success" plain @click="handleUser">添加用户</el-button> -->
         </el-col>
       </el-row>
     <!-- 加载表格 -->
@@ -56,7 +50,7 @@
             label="操作">
               <template slot-scope="scope">
                     <el-button type="primary" size="mini" plain icon="el-icon-edit"  ></el-button>
-                    <el-button type="danger" size="mini" plain icon="el-icon-delete"></el-button>
+                    <el-button type="danger" size="mini" plain icon="el-icon-delete" @click="handelDel(scope.row)"></el-button>
               </template>
           </el-table-column>
         </el-table>
@@ -86,7 +80,9 @@ export default {
       // 分页
       total: 0,
       pagesize: 10,
-      pagenum: 1
+      pagenum: 1,
+      // 查询
+      goodsval: ''
     }
   },
   created() {
@@ -115,6 +111,28 @@ export default {
       this.loadding = false
       this.list = goods
       this.total = total
+    },
+    // 删除该商品
+    async handelDel (row) {
+      this.$confirm('此操作将永久删除该用户, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        .then(async () => {
+          const id = row.goods_id
+          const res = await this.$http.delete(`goods/${id}`)
+          const {meta: {status, msg}} = res.data
+          if (status === 200) {
+            this.$message.success(msg)
+            this.locadata()
+          } else {
+            this.$message.error(msg)
+          }
+        })
+        .catch(() => {
+          this.$message({ type: 'info', message: '已取消删除' })
+        })
     }
   }
 }

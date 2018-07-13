@@ -181,7 +181,8 @@ export default {
     async handleAddCategos () {
       const pid = this.casderlist
       const name = this.listAdd.cat_name
-      console.log(this.casderlist[0])
+      // console.log(this.casderlist[0])
+      const fromData = {...this.listAdd, cat_pid: this.casderlist[this.casderlist.length - 1], cat_level: this.casderlist.length}
       if (pid.length === 0) {
         const {data: resData} = await this.$http.post(`categories`, {cat_pid: 0, cat_name: name, cat_level: 0})
         const {meta: {status, msg}} = resData
@@ -192,20 +193,8 @@ export default {
         } else {
           this.$message.error(msg)
         }
-      }
-      if (pid.length === 1) {
-        const {data: resData} = await this.$http.post(`categories`, {cat_pid: this.casderlist[0], cat_name: name, cat_level: 1})
-        const {meta: {status, msg}} = resData
-        if (status === 201) {
-          this.$message.success(msg)
-          this.AddFormDialog = false
-          this.locadata()
-        } else {
-          this.$message.error(msg)
-        }
-      }
-      if (pid.length === 2) {
-        const {data: resData} = await this.$http.post(`categories`, {cat_pid: this.casderlist[1], cat_name: name, cat_level: 2})
+      } else {
+        const {data: resData} = await this.$http.post(`categories`, fromData)
         const {meta: {status, msg}} = resData
         if (status === 201) {
           this.$message.success(msg)
