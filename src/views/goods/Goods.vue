@@ -9,7 +9,7 @@
             <el-button slot="append" icon="el-icon-search" ></el-button>
           </el-input>
           <!-- 添加商品 -->
-           <!-- <el-button type="success" plain @click="handleUser">添加用户</el-button> -->
+           <el-button type="success" plain @click="$router.push({name:'goods-add'})">添加用户</el-button>
         </el-col>
       </el-row>
     <!-- 加载表格 -->
@@ -71,6 +71,7 @@
 </template>
 
 <script>
+// import MyBreadcrumb from '@/compinents/MyBreadcrumb'
 export default {
   data () {
     return {

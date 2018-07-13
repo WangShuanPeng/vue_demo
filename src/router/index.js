@@ -9,6 +9,7 @@ import { Message } from 'element-ui'
 import Goods from '@/views/goods/Goods'
 import Categories from '@/views/goods/Categories'
 import Params from '@/views/goods/Params'
+import GoodsAdd from '@/views/goods/GoodsAdd'
 
 Vue.use(Router)
 const router = new Router({
@@ -42,6 +43,11 @@ const router = new Router({
           path: '/goods',
           name: 'goods',
           component: Goods
+        },
+        {
+          path: '/goods/add',
+          name: 'goods-add',
+          component: GoodsAdd
         },
         {
           path: '/categories',
