@@ -17,8 +17,8 @@
           <el-step title="商品内容"></el-step>
         </el-steps>
       <!-- 导航栏 -->
-      <el-tabs v-model="activeName" @tab-click="handleClick" tabPosition="left">
-        <el-tab-pane label="基本信息" name="1">
+      <el-tabs v-model="activeName"  tabPosition="left" @tab-click="handleClickStep">
+        <el-tab-pane label="基本信息" name="0">
             <el-form ref="form" :model="form" label-width="80px" style="width:600px">
               <el-form-item label="商品名称">
                 <el-input v-model="form.goods_name"></el-input>
@@ -40,11 +40,11 @@
                   <el-button>取消</el-button>
                 </el-form-item> -->
             </el-form>
+            <el-button @click="handelNextStep">下一步</el-button>
         </el-tab-pane>
         <!-- <el-tab-pane label="商品参数" name="2"></el-tab-pane> -->
         <!-- <el-tab-pane label="商品属性" name="3"></el-tab-pane> -->
-        <el-tab-pane label="商品图片" name="2">
-
+        <el-tab-pane label="商品图片" name="1">
         <el-upload
           class="upload-demo"
           action="http://localhost:8888/api/private/v1/upload/"
@@ -58,8 +58,9 @@
           <el-button size="small" type="primary">点击上传</el-button>
           <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
         </el-upload>
+        <el-button @click="handelNextStep">下一步</el-button>
         </el-tab-pane>
-        <el-tab-pane label="商品内容" name="3">
+        <el-tab-pane label="商品内容" name="2">
           <el-row>
             <el-col :span="4"><el-button type="primary" @click="handelAddGood">立即创建</el-button></el-col>
           </el-row>
@@ -88,7 +89,7 @@ export default {
     data () {
       return {
         active: 0,
-        activeName: "1",
+        activeName: '0',
         form: {
           goods_name: '',
           goods_price: '',
@@ -103,14 +104,12 @@ export default {
       }
     },
     methods: {
-      // next() {
-      //   if (this.active++ > 4) this.active = 0
-      //   if (this.activeName++ > 5) this.activeName = 1
-      // },
-       handleClick(tab, event) {
-        console.log(tab, event)
-        // if (this.active++ > 2) this.active = 0
-        // if (this.activeName++ > 3) this.activeName = 1
+      handelNextStep () {
+        this.activeName = Number.parseInt(this.activeName) + 1 + ''
+        this.active++
+      },
+      handleClickStep (tab) {
+        this.active = tab.index - 0
       },
       handlechangecate (data) {
         this.form.goods_cat = data.join(',')
@@ -119,17 +118,19 @@ export default {
       async handelsuccess (esponse, file, fileList) {
         console.log(file)
        const {data, meta: {status, msg}} = file.response
-      //  console.log(data)
-      this.form.pics.pic = data.tmp_path
+       console.log(data)
+      const path = data.tmp_path
+      const index = path.indexOf('.')
+      const tmp_path = path.substr(0,index)
+      this.form.pics = {pic: tmp_path}
       if (status === 200 ) {
         this.$message.success(msg)
-        console.log(this.form.pics)
       } else {
         this.$message.error(msg)
       }
-
       },
       async handelAddGood () {
+        console.log(this.form)
         const res = await this.$http.post('goods',this.form)
         const {data, meta} = res.data
 
