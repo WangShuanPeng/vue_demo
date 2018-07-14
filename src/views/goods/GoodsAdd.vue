@@ -86,86 +86,82 @@ import 'quill/dist/quill.bubble.css'
 import { quillEditor } from 'vue-quill-editor'
 const token = sessionStorage.getItem('token')
 export default {
-    data () {
-      return {
-        active: 0,
-        activeName: '0',
-        form: {
-          goods_name: '',
-          goods_price: '',
-          goods_weight: '',
-          goods_number: '',
-          goods_cat: '',
-          goods_introduce: '',
-          pics: []
-        },
-        fileList: [],
-        headerstoken: {Authorization:token}
-      }
+  data () {
+    return {
+      active: 0,
+      activeName: '0',
+      form: {
+        goods_name: '',
+        goods_price: '',
+        goods_weight: '',
+        goods_number: '',
+        goods_cat: '',
+        goods_introduce: '',
+        pics: []
+      },
+      fileList: [],
+      headerstoken: {Authorization: token}
+    }
+  },
+  methods: {
+    handelNextStep () {
+      this.activeName = Number.parseInt(this.activeName) + 1 + ''
+      this.active++
     },
-    methods: {
-      handelNextStep () {
-        this.activeName = Number.parseInt(this.activeName) + 1 + ''
-        this.active++
-      },
-      handleClickStep (tab) {
-        this.active = tab.index - 0
-      },
-      handlechangecate (data) {
-        this.form.goods_cat = data.join(',')
-      },
-
-      async handelsuccess (esponse, file, fileList) {
-        console.log(file)
-       const {data, meta: {status, msg}} = file.response
-       console.log(data)
+    handleClickStep (tab) {
+      this.active = tab.index - 0
+    },
+    handlechangecate (data) {
+      this.form.goods_cat = data.join(',')
+    },
+    async handelsuccess (esponse, file, fileList) {
+      console.log(file)
+      const {data, meta: {status, msg}} = file.response
+      console.log(data)
       const path = data.tmp_path
       const index = path.indexOf('.')
-      const tmp_path = path.substr(0,index)
-      this.form.pics = {pic: tmp_path}
-      if (status === 200 ) {
+      const tmppath = path.substr(0, index)
+      this.form.pics = {pic: tmppath}
+      if (status === 200) {
         this.$message.success(msg)
       } else {
         this.$message.error(msg)
       }
-      },
-      async handelAddGood () {
-        console.log(this.form)
-        const res = await this.$http.post('goods',this.form)
-        const {data, meta} = res.data
-
-        if (meta.status === 400) {
-          this.$message.error(meta.msg)
-        } else if (meta.status === 201) {
-          this.$message.success(meta.msg)
-          // this.$router.push({name:'goods'})
-          console.log(res)
-        }
-      },
-      // 富文本编辑器方法
-      onEditorBlur () {
-        console.log('onEditorBlur')
-       },
-      onEditorFocus () {
-         console.log('onEditorFocus')
-      },
-      onEditorReady () {
-        console.log('onEditorReady')
-       },
-      // 文件上传的方法
-      handleRemove(file, fileList) {
-        console.log(file, fileList)
-
-      },
-      handlePreview(file) {
-        console.log(file)
-      },
-      handlebefore () {
-        // const token = sessionStorage.getItem('token')
-        // console.log(token)
+    },
+    async handelAddGood () {
+      console.log(this.form)
+      const res = await this.$http.post('goods', this.form)
+      const {meta} = res.data
+      if (meta.status === 400) {
+        this.$message.error(meta.msg)
+      } else if (meta.status === 201) {
+        this.$message.success(meta.msg)
+      // this.$router.push({name:'goods'})
       }
     },
-    components: {
+    // 富文本编辑器方法
+    onEditorBlur () {
+      console.log('onEditorBlur')
+    },
+    onEditorFocus () {
+      console.log('onEditorFocus')
+    },
+    onEditorReady () {
+      console.log('onEditorReady')
+    },
+    // 文件上传的方法
+    handleRemove(file, fileList) {
+      console.log(file, fileList)
+    },
+    handlePreview(file) {
+      console.log(file)
+    },
+    handlebefore () {
+      // const token = sessionStorage.getItem('token')
+      // console.log(token)
+    }
+  },
+  components: {
     Categorycasder,
     quillEditor
   }

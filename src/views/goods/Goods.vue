@@ -143,10 +143,9 @@ export default {
       const data = res.data
       const {meta: {status, msg}} = data
       if (status === 200) {
-        const {data: {total, goods }} = data
+        const {data: {total, goods}} = data
         this.total = total
         this.list = goods
-
       } else {
         this.$message.error(msg)
       }

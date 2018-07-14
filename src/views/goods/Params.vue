@@ -129,13 +129,11 @@
 </template>
 
 <script>
-
-
 export default {
   data () {
     return {
       // 级联菜单数据源
-       optionslist: [],
+      optionslist: [],
       // selectedOptions: [],
       props: {
         label: 'cat_name',
@@ -180,10 +178,9 @@ export default {
       this.onlyData = resonly.data.data
       this.manyData = resmany.data.data
     },
-
     // 添加动态参数对话框
     handleMany () {
-     this.AddManyFormDialog = true
+      this.AddManyFormDialog = true
     },
     // 关闭添加动态参数对话框
     AddManyFormDialogfalse () {
@@ -191,11 +188,11 @@ export default {
     },
     // 添加动态参数
     async handelAddMany () {
-      console.log(this.listAddMany,this.paramsid)
+      console.log(this.listAddMany, this.paramsid)
 
-      const res = await this.$http.post(`categories/${this.paramsid}/attributes`,this.listAddMany)
-      const {data, meta: {status, msg}} =res.data
-      if( status === 201) {
+      const res = await this.$http.post(`categories/${this.paramsid}/attributes`, this.listAddMany)
+      const {data, meta: {status, msg}} = res.data
+      if (status === 201) {
         this.$message.success(msg)
         this.manyData.push(data)
         this.AddManyFormDialog = false
@@ -204,9 +201,9 @@ export default {
       }
     },
     // 删除动态参数
-    async handleDelMany (row){
+    async handleDelMany (row) {
       // console.log(this.manyData.length)
-     this.$confirm('此操作将永久删除该参数, 是否继续?', '提示', {
+      this.$confirm('此操作将永久删除该参数, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
@@ -218,7 +215,7 @@ export default {
           const {meta: {status, msg}} = res.data
           if (status === 200) {
             this.$message.success(msg)
-              this.manyData = this.manyData.slice(0, this.manyData.length-1)
+            this.manyData = this.manyData.slice(0, this.manyData.length - 1)
           } else {
             this.$message.error(msg)
           }
@@ -228,7 +225,7 @@ export default {
         })
     },
     // 删除商品动态参数
-    handleClose (row,tag) {
+    handleClose (row, tag) {
       console.log(tag)
       //  row.attr_vals.splice(this.dynamicTags.indexOf(tag), 1)
     },
@@ -243,10 +240,9 @@ export default {
     },
     // 添加动态参数按钮
     async handelAddOnly () {
-
-      const res = await this.$http.post(`categories/${this.paramsid}/attributes`,this.listAddOnly)
-      const {data, meta: {status, msg}} =res.data
-      if( status === 201) {
+      const res = await this.$http.post(`categories/${this.paramsid}/attributes`, this.listAddOnly)
+      const {data, meta: {status, msg}} = res.data
+      if (status === 201) {
         this.$message.success(msg)
         this.onlyData.push(data)
         this.AddOnlyFormDialog = false
@@ -256,7 +252,7 @@ export default {
     },
     // 删除静态参数
     handelDelOnly (row) {
-       this.$confirm('此操作将永久删除该参数, 是否继续?', '提示', {
+      this.$confirm('此操作将永久删除该参数, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
@@ -268,7 +264,7 @@ export default {
           const {meta: {status, msg}} = res.data
           if (status === 200) {
             this.$message.success(msg)
-              this.onlyData = this.onlyData.slice(0, this.onlyData.length-1)
+            this.onlyData = this.onlyData.slice(0, this.onlyData.length - 1)
           } else {
             this.$message.error(msg)
           }

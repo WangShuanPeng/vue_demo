@@ -19,14 +19,14 @@ export default {
       default: 2
     }
   },
- async created() {
+  async created() {
     const {data: resData} = await this.$http.get(`categories?type=${this.type}`)
     const {data} = resData
     this.optionslist = data
   },
   data () {
     return {
-       optionslist: [],
+      optionslist: [],
       // selectedOptions: [],
       props: {
         label: 'cat_name',
@@ -40,7 +40,7 @@ export default {
     handleChange () {
       // console.log(this.selectedOptions)
       // 外部可以使用这个获取 的数组
-      this.$emit('changecate',this.selectedOptions)
+      this.$emit('changecate', this.selectedOptions)
     }
   }
 }
