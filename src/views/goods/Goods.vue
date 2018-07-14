@@ -6,7 +6,7 @@
       <el-row class="searchAt">
          <el-col :span="24">
           <el-input class="searchInput" clearable placeholder="请输入内容" v-model="goodsval">
-            <el-button slot="append" icon="el-icon-search" ></el-button>
+            <el-button slot="append" icon="el-icon-search" @click="searchGoods"></el-button>
           </el-input>
           <!-- 添加商品 -->
            <el-button type="success" plain @click="$router.push({name:'goods-add'})">添加用户</el-button>
@@ -115,7 +115,7 @@ export default {
     },
     // 删除该商品
     async handelDel (row) {
-      this.$confirm('此操作将永久删除该用户, 是否继续?', '提示', {
+      this.$confirm('此操作将永久删除该商品, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
@@ -134,6 +134,22 @@ export default {
         .catch(() => {
           this.$message({ type: 'info', message: '已取消删除' })
         })
+    },
+    // 根据id查询商品
+    async searchGoods () {
+      const id = this.goodsval
+      console.log(id)
+      const res = await this.$http.get(`goods?query=${id}&pagenum=${this.pagenum}&pagesize=${this.pagesize}`)
+      const data = res.data
+      const {meta: {status, msg}} = data
+      if (status === 200) {
+        const {data: {total, goods }} = data
+        this.total = total
+        this.list = goods
+
+      } else {
+        this.$message.error(msg)
+      }
     }
   }
 }
