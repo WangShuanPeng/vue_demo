@@ -111,17 +111,39 @@ export default {
     handleClickStep (tab) {
       this.active = tab.index - 0
     },
+    // 文件移除的方法
+    handleRemove(file, fileList) {
+      console.log(file, fileList)
+      const index = this.form.pics.findIndex(function (item) {
+        return item.pic === file.response.data.tmp_path
+      })
+      if (index !== -1) {
+        this.form.pics.splice(index, 1)
+      }
+
+    },
+    handlePreview(file) {
+      console.log(file)
+    },
+    handlebefore () {
+      // const token = sessionStorage.getItem('token')
+      // console.log(token)
+    },
+
     handlechangecate (data) {
       this.form.goods_cat = data.join(',')
     },
+       // 文件上传成功
     async handelsuccess (esponse, file, fileList) {
       console.log(file)
       const {data, meta: {status, msg}} = file.response
       console.log(data)
-      const path = data.tmp_path
-      const index = path.indexOf('.')
-      const tmppath = path.substr(0, index)
-      this.form.pics = {pic: tmppath}
+      const path = data.
+      // const index = path.indexOf('.')
+      // const tmppath = path.substr(0, index)
+      this.form.pics.push ({
+        pic: data.tmp_path
+        })
       if (status === 200) {
         this.$message.success(msg)
       } else {
@@ -136,7 +158,7 @@ export default {
         this.$message.error(meta.msg)
       } else if (meta.status === 201) {
         this.$message.success(meta.msg)
-      // this.$router.push({name:'goods'})
+      this.$router.push({name:'goods'})
       }
     },
     // 富文本编辑器方法
@@ -148,18 +170,8 @@ export default {
     },
     onEditorReady () {
       console.log('onEditorReady')
-    },
-    // 文件上传的方法
-    handleRemove(file, fileList) {
-      console.log(file, fileList)
-    },
-    handlePreview(file) {
-      console.log(file)
-    },
-    handlebefore () {
-      // const token = sessionStorage.getItem('token')
-      // console.log(token)
     }
+
   },
   components: {
     Categorycasder,
