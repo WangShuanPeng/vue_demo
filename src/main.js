@@ -9,7 +9,6 @@ import './assets/css/style.css'
 import Myaxios from '@/plugins/plugin'
 import moment from 'moment'
 import MyBreadcrumb from '@/components/MyBreadcrumb'
-
 Vue.config.productionTip = false
 
 // 注册全局组件

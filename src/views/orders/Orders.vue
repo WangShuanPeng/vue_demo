@@ -1,5 +1,7 @@
 <template>
   <el-card class="box-card">
+      <!-- 面包屑 -->
+     <my-breadcrumb level1="订单管理" level2="订单列表" class="mianbao"></my-breadcrumb>
     <!-- 加载表格 -->
     <el-table
           v-loading="loadding"
@@ -42,7 +44,26 @@
            <el-table-column
             label="操作">
               <template slot-scope="scope">
-              <el-button type="primary" size="mini" plain icon="el-icon-edit"></el-button>
+              <el-button type="primary" size="mini" plain icon="el-icon-edit" @click="handeldialogForm"></el-button>
+                  <el-dialog title="收货地址" :visible.sync="EditdialogFormVisible">
+                    <el-form >
+                      <el-form-item label="省市区/县" label-width="120px">
+                              <el-cascader
+                                  size="large"
+                                  :options="options"
+                                  v-model="selectedOptions"
+                                  @change="handleChange">
+                                </el-cascader>
+                      </el-form-item>
+                       <el-form-item label="详细地址" label-width="120px">
+                        <el-input  auto-complete="off"></el-input>
+                      </el-form-item>
+                    </el-form>
+                    <div slot="footer" class="dialog-footer">
+                      <el-button @click="handeldialogFormfalse">取 消</el-button>
+                      <el-button type="primary" @click="handeldialogFormfalse" >确 定</el-button>
+                    </div>
+                  </el-dialog>
             </template>
           </el-table-column>
         </el-table>
@@ -57,10 +78,16 @@
             :total="total">
           </el-pagination>
      </template>
+     <el-button @click="handelMapMove">移动地图</el-button>
+     <el-card id="Bmpcontainer">
+
+     </el-card>
   </el-card>
 </template>
 
 <script>
+import { regionData } from 'element-china-area-data'
+const { BMap } = window
 export default {
   data () {
     return {
@@ -70,13 +97,31 @@ export default {
       // 分页
       total: 0,
       pagesize: 10,
-      pagenum: 1
+      pagenum: 1,
+      EditdialogFormVisible: false,
+      Editform: [],
+      options: regionData,
+      selectedOptions: [],
+      map: null
     }
+  },
+  mounted() {
+    this.map = new BMap.Map('Bmpcontainer')
+    const point = new
+    BMap.Point(116.404, 39.915)
+    this.map.centerAndZoom(point, 15)
   },
   created() {
     this.locadata()
   },
   methods: {
+    handelMapMove () {
+      const { map } = this
+      var point = new BMap.Point(116.404, 39.915)
+      map.centerAndZoom(point, 15)
+      var marker = new BMap.Marker(point)
+      map.addOverlay(marker)
+    },
     // 分页方法
     handleSizeChange (val) {
       // size发生变化
@@ -94,16 +139,30 @@ export default {
     },
     async locadata () {
       this.loadding = true
-      const  resData = await this.$http.get(`orders?pagenum=${this.pagenum}&pagesize=${this.pagesize}`)
+      const resData = await this.$http.get(`orders?pagenum=${this.pagenum}&pagesize=${this.pagesize}`)
       const {data: {goods, total}} = resData.data
       this.loadding = false
       this.list = goods
       this.total = total
+    },
+    // 打开修改对话框
+    handeldialogForm () {
+      this.EditdialogFormVisible = true
+    },
+    // 关闭对话框
+    handeldialogFormfalse () {
+      this.EditdialogFormVisible = false
+    },
+    handleChange (value) {
+      console.log(value)
     }
   }
 }
 </script>
 
 <style>
-
+#Bmpcontainer{
+  width: 100%;
+  height: 500px;
+}
 </style>
