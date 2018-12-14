@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import { Message } from 'element-ui'
 import Index from '@/pages/index.vue'
+import Flex from '@/pages/flex/flex.vue'
 
 Vue.use(Router)
 const router = new Router({
@@ -15,12 +16,16 @@ const router = new Router({
       path: '/index',
       component: Index
     },
+    {
+      path: '/flex',
+      component: Flex
+    }
   ]
 })
 
 // 路由的前置守卫
 // router.beforeEach((to, from, next) => {
-  // 判断有没有token  登录不需要token
+// 判断有没有token  登录不需要token
 //   if (to.name === 'login') {
 //     next()
 //   } else {
