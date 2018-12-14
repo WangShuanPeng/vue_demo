@@ -1,4 +1,6 @@
-# vue_demo
+# help-demo
+
+## 主要是针对自己再开发过程中记录的一些帮助 例子等等
 
 > A Vue.js project
 

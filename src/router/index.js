@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import { Message } from 'element-ui'
-import Index from '@/views/index.vue'
+import Index from '@/pages/index.vue'
 
 Vue.use(Router)
 const router = new Router({
