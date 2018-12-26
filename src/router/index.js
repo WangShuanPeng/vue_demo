@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import { Message } from 'element-ui'
 import Index from '@/pages/index.vue'
 import Flex from '@/pages/flex/flex.vue'
+import CanvasPen from '@/pages/canvasPen/canvasPen.vue'
 
 Vue.use(Router)
 const router = new Router({
@@ -19,6 +20,10 @@ const router = new Router({
     {
       path: '/flex',
       component: Flex
+    },
+    {
+      path: '/canvaspen',
+      component: CanvasPen
     }
   ]
 })
