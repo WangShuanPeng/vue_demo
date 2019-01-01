@@ -1,12 +1,16 @@
 <template>
-    <div>index</div>
+    <div>跳转到
+    <router-link to='flex'>zrender</router-link>
+    <router-link to='canvas'>zrender</router-link>
+
+    </div>
 </template>
 
 <script>
 export default {
   data() {
     return {
-      
+
     }
   },
   methods: {
