@@ -1,6 +1,7 @@
-# help-demo
+# Small examples of work
+# seow
 
-## 主要是针对自己再开发过程中记录的一些帮助 例子等等
+## 主要是一些自己再开发过程中记录的一些帮助 小例子,好玩的东西等等
 
 > A Vue.js project
 
