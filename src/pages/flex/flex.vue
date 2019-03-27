@@ -26,11 +26,11 @@
       addZrenderText () {
         let box = document.getElementById('left')
         let zr = zrender.init(box)
+        console.log(zr)
+        var w = zr.getWidth();
+        var h = zr.getHeight();
 
-        let w = zr.getWidth()
-        let h = zr.getHeight()
-
-        let t1 = new zrender.Text({
+        var t1 = new zrender.Text({
           style: {
             text: this.zrenderText,
             textAlign: 'center',
@@ -42,10 +42,10 @@
             blend: 'lighten'
           },
           position: [w / 2 + 5, h / 2]
-        })
-        zr.add(t1)
+        });
+        zr.add(t1);
 
-        let t2 = new zrender.Text({
+        var t2 = new zrender.Text({
           style: {
             text: this.zrenderText,
             textAlign: 'center',
@@ -57,12 +57,12 @@
             blend: 'lighten'
           },
           position: [w / 2, h / 2]
-        })
-        zr.add(t2)
+        });
+        zr.add(t2);
 
-        let lines = []
-        for (let i = 0; i < 16; ++i) {
-          let line = new zrender.Rect({
+        var lines = [];
+        for (var i = 0; i < 16; ++i) {
+          var line = new zrender.Rect({
             shape: {
               x: w * (Math.random() - 0.3),
               y: h * Math.random(),
@@ -74,36 +74,39 @@
               blend: 'lighten',
               opacity: 0
             }
-          })
-          zr.add(line)
-          lines.push(line)
+          });
+          zr.add(line);
+          lines.push(line);
         }
 
         setInterval(function () {
           if (Math.random() > 0.2) {
-            t2.attr('position', [w / 2 + Math.random() * 50, h / 2])
+            t2.attr('position', [w / 2 + Math.random() * 50, h / 2]);
 
-            for (let i = 0; i < lines.length; ++i) {
+            for (var i = 0; i < lines.length; ++i) {
               lines[i].attr('shape', {
                 x: w * Math.random(),
                 y: h * Math.random(),
                 width: w * Math.random(),
                 height: Math.random() * 8
-              })
+              });
               lines[i].attr('style', {
                 opacity: 1
-              })
+              });
             }
+
             setTimeout(function () {
-              t2.attr('position', [w / 2, h / 2])
-              for (let i = 0; i < lines.length; ++i) {
+              t2.attr('position', [w / 2, h / 2]);
+
+
+              for (var i = 0; i < lines.length; ++i) {
                 lines[i].attr('style', {
                   opacity: 0
-                })
+                });
               }
-            }, 100)
+            }, 100);
           }
-        }, 500)
+        }, 500);
       },
       addZrenderMan () {
         let box = document.getElementById('left')
@@ -259,7 +262,6 @@
         setInterval(function () {
           if (Math.random() > 0.2) {
             c1.attr('position', [Math.floor(Math.random() * (w - 1)) + 1,Math.floor(Math.random() * (h - 1)) + 1])
-            console.log(Math.floor(Math.random() * (w - 1)) + 1,Math.floor(Math.random() * (h - 1)) + 1)
           }
 
         }, 500)
